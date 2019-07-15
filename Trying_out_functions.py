@@ -7,15 +7,13 @@ gal = fr.load_image_file('./Individual faces/gal_gadot.jpg')
 # Converting to a featured vector by returning the 128-dimension face encoding for each face in the image.
 gal_encoding = fr.face_encodings(gal)[0]
 
-alba = fr.load_image_file('./Individual faces/jessica_alba.jpg')
-alba_encoding = fr.face_encodings(alba)[0]
 
 #Create array of encodings and names
-known_face_encodings =[gal_encoding,alba_encoding]
-known_faces_names = ['Gal Gadot','Jessica Alba']
+known_face_encodings =[gal_encoding,]
+known_faces_names = ['Gal Gadot']
 
 # Load test image to find faces in
-test_image = fr.load_image_file('./Group of unclear faces/gal_alba.png')
+test_image = fr.load_image_file('./Group of unclear faces/group_gal.jpg')
 
 # Find faces in test image by pointing out the location
 face_locations = fr.face_locations(test_image)
@@ -50,6 +48,4 @@ for(top,right,bottom,left), face_encoding in zip(face_locations,face_encodings):
 del draw
 
 # Display image
-pil_image.save(f'{top}.jpg')
-
-
+pil_image.save('identify_matches.jpg')

@@ -1,23 +1,23 @@
 import face_recognition as fr
 from PIL import Image,ImageDraw
 
+# Load the picture into face_recognition module
 gal = fr.load_image_file('./Individual faces/gal_gadot.jpg')
+
+# Converting to a featured vector by returning the 128-dimension face encoding for each face in the image.
 gal_encoding = fr.face_encodings(gal)[0]
 
 alba = fr.load_image_file('./Individual faces/jessica_alba.jpg')
 alba_encoding = fr.face_encodings(alba)[0]
 
 #Create array of encodings and names
-known_face_encodings =[
-    gal_encoding,alba_encoding
-]
-
+known_face_encodings =[gal_encoding,alba_encoding]
 known_faces_names = ['Gal Gadot','Jessica Alba']
 
 # Load test image to find faces in
 test_image = fr.load_image_file('./Group of unclear faces/gal_alba.png')
 
-# Find faces in test image
+# Find faces in test image by pointing out the location
 face_locations = fr.face_locations(test_image)
 face_encodings = fr.face_encodings(test_image,face_locations)
 

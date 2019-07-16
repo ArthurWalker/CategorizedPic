@@ -1,51 +1,65 @@
 import face_recognition as fr
-from PIL import Image,ImageDraw
+from PIL import Image
+import time
+import os
 
-# Load the picture into face_recognition module
-gal = fr.load_image_file('./Individual faces/gal_gadot.jpg')
+def create_dir(file_name):
+    curr_path = os.getcwd().replace('\\','/')
+    curr_path+='/'+'Results/'
+    try:
+        if not os.path.exists(curr_path+file_name+'/'):
+            os.makedirs(curr_path+file_name)
+    except Exception as ex:
+        print (ex)
+    curr_path += file_name + '/'
+    return curr_path
 
-# Converting to a featured vector by returning the 128-dimension face encoding for each face in the image.
-gal_encoding = fr.face_encodings(gal)[0]
+def person_image():
+    # Load the picture into face_recognition module
+    gal = fr.load_image_file('./Individual faces/jessica_alba.jpg')
+
+    # Converting to a featured vector by returning the 128-dimension face encoding for each face in the image.
+    gal_encoding = fr.face_encodings(gal)[0]
 
 
-#Create array of encodings and names
-known_face_encodings =[gal_encoding,]
-known_faces_names = ['Gal Gadot']
+    #Create array of encodings and names
+    known_face_encodings =[gal_encoding]
+    known_faces_names = ['Jessica Alba']
 
-# Load test image to find faces in
-test_image = fr.load_image_file('./Group of unclear faces/group_gal.jpg')
+    return known_face_encodings,known_faces_names
 
-# Find faces in test image by pointing out the location
-face_locations = fr.face_locations(test_image)
-face_encodings = fr.face_encodings(test_image,face_locations)
+def extracting_image():
+    # Load test image to find faces in
+    test_image = fr.load_image_file('./Group of unclear faces/gal_alba.png')
+    return test_image
 
-# Convert to PIL format
-pil_image = Image.fromarray(test_image)
+def main():
+    known_face_encodings, known_faces_names = person_image()
+    test_image = extracting_image()
 
-# Create an ImageDraw instance
-draw = ImageDraw.Draw(pil_image)
+    # Find faces in test image by pointing out the location
+    face_locations = fr.face_locations(test_image)
+    face_encodings = fr.face_encodings(test_image,face_locations)
 
-# Loop through faces in test image
-for(top,right,bottom,left), face_encoding in zip(face_locations,face_encodings):
-    matches = fr.compare_faces(known_face_encodings,face_encoding)
+    # Convert to PIL format
+    pil_image = Image.fromarray(test_image)
 
-    name = "Unknown Person"
+    # Loop through faces in test image
+    for(top,right,bottom,left), face_encoding in zip(face_locations,face_encodings):
+        matches = fr.compare_faces(known_face_encodings,face_encoding)
 
-    # If match
-    if True in matches:
-        first_match_index = matches.index(True)
-        name = known_faces_names[first_match_index]
+        #name = "Unknown Person"
 
-    # Draw Box
-    draw.rectangle(((left,top),(right,bottom)),outline=(0,0,0))
+        # If match
+        if True in matches:
+            first_match_index = matches.index(True)
+            name = known_faces_names[first_match_index]
+            folder_path = create_dir(name)
 
-    # Draw label
-    text_width,text_height = draw.textsize(name)
-    draw.rectangle(((left,bottom - text_height-10),(right,bottom)),fill=(0,0,0),outline=(0,0,0))
-    draw.text((left + 6,bottom-text_height-5),name,fill=(255,255,255,255))
+            pil_image.save(folder_path+name+'.jpg')
 
-# Delete draw from the memory as recommended
-del draw
-
-# Display image
-pil_image.save('identify_matches.jpg')
+if __name__ == '__main__':
+    start = time.time()
+    main()
+    print('Done! from ', time.asctime(time.localtime(start)), ' to ',
+          time.asctime(time.localtime(time.time())))

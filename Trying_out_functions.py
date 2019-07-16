@@ -14,9 +14,21 @@ def create_dir(file_name):
     curr_path += file_name + '/'
     return curr_path
 
+def extract_face(image):
+    face_locations = fr.face_locations(image)
+    # Extract each faces and store them
+    for face_location in face_locations:
+        top, right, bottom, left = face_location
+        face_image = image[top:bottom, left:right]
+        pil_image = Image.fromarray(face_image)
+        pil_image.save('./Individual faces/Phuc0.jpg')
+
+
 def person_image():
     # Load the picture into face_recognition module
-    gal = fr.load_image_file('./Individual faces/jessica_alba.jpg')
+    gal = fr.load_image_file('./Individual faces/Phuc0.jpg')
+    #extract_face(gal)
+
 
     # Converting to a featured vector by returning the 128-dimension face encoding for each face in the image.
     gal_encoding = fr.face_encodings(gal)[0]
@@ -24,13 +36,13 @@ def person_image():
 
     #Create array of encodings and names
     known_face_encodings =[gal_encoding]
-    known_faces_names = ['Jessica Alba']
+    known_faces_names = ['Phuc']
 
     return known_face_encodings,known_faces_names
 
 def extracting_image():
     # Load test image to find faces in
-    test_image = fr.load_image_file('./Group of unclear faces/gal_alba.png')
+    test_image = fr.load_image_file('./Group of unclear faces/Phuc3.jpg')
     return test_image
 
 def main():

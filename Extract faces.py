@@ -11,15 +11,16 @@ import numpy as np
 
 
 def identify_vertical_pic(pic_np):
-    width,height,channel = pic_np.shape
-    if width < height:
-        return np.rot90(pic_np)
+    num_faces = fr.face_locations(pic_np)
+    while len(num_faces) ==0:
+        pic_np= np.rot90(pic_np,3)
+        num_faces = fr.face_locations(pic_np)
     return pic_np
 
 
 def main():
 
-    image = identify_vertical_pic(fr.load_image_file('./Picture to extract faces/Chi.jpg'))
+    image = identify_vertical_pic(fr.load_image_file('./Picture to extract faces/co Mai chu Tuan.jpg'))
 
     face_locations =  fr.face_locations(image)
 
@@ -29,7 +30,7 @@ def main():
         face_image = image[top:bottom,left:right]
         pil_image= Image.fromarray(face_image)
         #pil_image.show()
-        pil_image.save('./Sample faces/3.jpg')
+        pil_image.save('./Sample faces/testing'+str(i)+'.jpg')
 
 if __name__ =='__main__':
     main()

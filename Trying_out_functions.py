@@ -46,7 +46,7 @@ def person_image():
         known_face_encodings.append(fr.face_encodings(sample_face)[0])
 
     #Create array of names
-    known_faces_names = ['Phuc','Chau','Tuan']
+    known_faces_names = ['Phuc','Chau','Tuan','Chi']
     return known_face_encodings,known_faces_names
 
 def load_extracting_image():

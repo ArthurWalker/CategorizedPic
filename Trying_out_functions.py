@@ -51,18 +51,23 @@ def person_image():
         known_face_encodings.append(fr.face_encodings(sample_face)[0])
 
     #Create array of names
-    known_faces_names = ['Phuc','Chau','Tuan','Chi','chu Tuan']
+    known_faces_names = ['Bin','Mai','Tuan2']
     return known_face_encodings,known_faces_names
 
 def load_extracting_image():
     test_image =[]
     image_name = []
-    # Load test image to find faces in
-    for i,image in enumerate(tqdm(list(os.listdir('./Pictures/')))):
-        img_np = fr.load_image_file('./Pictures/'+image)
-        transpose_img_np = identify_vertical_pic(img_np)
-        test_image.append(transpose_img_np)
-        image_name.append(image)
+    # Load test image to find faces in the right position
+    for i,image in enumerate(tqdm(list(os.listdir('C:/Users/Phuc/Desktop/Sample pic/')))):
+        if '.jpg' in image:
+            try:
+                img_np = fr.load_image_file('C:/Users/Phuc/Desktop/Sample pic/'+image)
+            except Exception as ex:
+                print (ex)
+                print (image)
+            transpose_img_np = identify_vertical_pic(img_np)
+            test_image.append(transpose_img_np)
+            image_name.append(image)
     return test_image,image_name
 
 def main():
@@ -81,20 +86,20 @@ def main():
             for face_encoding in face_encodings:
                 matches = fr.compare_faces(known_face_encodings,face_encoding)
                 #name = "Unknown Person"
-                # If match
+                # If matched
                 if True in matches:
                     first_match_index = matches.index(True)
-                    name = known_faces_names[first_match_index]
-                    folder_path = create_dir(name)
+                    #name = known_faces_names[first_match_index]
+                    folder_path = create_dir('Nha chu Tuan-co Mai')
                     # Move file
                     try:
-                        newPath = shutil.copy('./Pictures/'+list_name[i],folder_path+list_name[i])
+                        newPath = shutil.copy('C:/Users/Phuc/Desktop/Sample pic/'+list_name[i],folder_path+list_name[i])
                     except Exception as ex:
-                        print (ex)
-                #Copy file
-                #newPath = shutil.copy('./Pictures/'+list_name[i],'./Unknown Results/'+list_name[i])
+                        newPath = shutil.copy('C:/Users/Phuc/Desktop/Sample pic/' + list_name[i], './Unknown Results/' + list_name[i])
+                else:
+                    newPath = shutil.copy('C:/Users/Phuc/Desktop/Sample pic/' + list_name[i], './Unknown Results/' + list_name[i])
         except Exception as ex:
-            newPath = shutil.copy('./Pictures/' + list_name[i], './Unknown Results/' + list_name[i])
+            newPath = shutil.copy('C:/Users/Phuc/Desktop/Sample pic/' + list_name[i], './Unknown Results/' + list_name[i])
         i+=1
 
 if __name__ == '__main__':
